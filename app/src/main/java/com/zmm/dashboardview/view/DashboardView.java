@@ -168,17 +168,19 @@ public class DashboardView extends View {
 
         p.setShader(mSweepGradient);
 
-        canvas.drawArc(secondRectF, 145, fill, false, p);
+        if(percent != 0){
+            canvas.drawArc(secondRectF, 145, fill, false, p);
+        }
 
         p.reset();
         p.setAntiAlias(true);
         p.setStyle(Paint.Style.STROKE);
         p.setStrokeWidth(mScendArcWidth);
         //内部分圆弧颜色
-        if(percent==0){
-            p.setColor(Color.WHITE);
-            canvas.drawArc(secondRectF, 145, fill, false, p);
-        }
+//        if(percent==0){
+//            p.setColor(Color.WHITE);
+//            canvas.drawArc(secondRectF, 145, fill, false, p);
+//        }
         //内部分圆弧颜色
         p.setColor(mRadianColorIn);
         //画弧胡的未充满部分
@@ -224,14 +226,14 @@ public class DashboardView extends View {
         //---------------------------------------------------
         //绘制矩形
         p.setStyle(Paint.Style.FILL);
-        p.setColor(Color.WHITE);
+//        p.setColor(Color.WHITE);
         mRectWidth = 100;
         mRectHeight = 300;
         //距离上面高度  加上了刻度线高度
         float topDis = 60+mTikeWidth;
 
         //文字矩形的最底部坐标
-        canvas.drawRect(mWidth/2-mRectWidth/2,topDis,mWidth/2+mRectWidth/2,mRectHeight+topDis,p);
+//        canvas.drawRect(mWidth/2-mRectWidth/2,topDis,mWidth/2+mRectWidth/2,mRectHeight+topDis,p);
 
 
         canvas.drawBitmap(mBitmap,(mWidth-mBitmap.getWidth())/2,topDis+20,p);
