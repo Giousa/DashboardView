@@ -100,6 +100,17 @@ public class DashboardView extends View {
         System.out.println("type = "+mTextType+",unit = "+mTextUnit+",value = "+mTextValue);
         mScendArcWidth = 50;
         a.recycle();
+
+        //对图片进行缩放
+        mOptions = new BitmapFactory.Options();
+        mOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(getResources(), R.drawable.bpmeter_heart_icon, mOptions);
+        int be = (int)(mOptions.outHeight / (float)20);
+
+        mOptions.inJustDecodeBounds = false;
+        mOptions.inSampleSize = be;
+        mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bpmeter_heart_icon, mOptions);
+
     }
 
 
@@ -124,20 +135,11 @@ public class DashboardView extends View {
         System.out.println("width = "+mWidth+",height = "+mHeight);
         setMeasuredDimension(mWidth, mHeight);
 
+        //因为渐变颜色，默认是从0，也就是3点开始，所以顺时针旋转90度，从6点开始进行渐变
         mSweepGradient = new SweepGradient(mWidth/2, mHeight/2, doughnutColors, null);
         mMatrix = new Matrix();
         mMatrix.setRotate(90, mWidth/2, mHeight/2);
         mSweepGradient.setLocalMatrix(mMatrix);
-        mOptions = new BitmapFactory.Options();
-
-        mOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(getResources(), R.drawable.bpmeter_heart_icon, mOptions);
-        int be = (int)(mOptions.outHeight / (float)20);
-
-        mOptions.inJustDecodeBounds = false;
-        mOptions.inSampleSize = be;
-        mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bpmeter_heart_icon, mOptions);
-
     }
 
 
