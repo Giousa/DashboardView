@@ -10,13 +10,10 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.SweepGradient;
-import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.view.View;
 
 import com.zmm.dashboardview.R;
-
-import static android.R.attr.type;
 
 /**
  * Description: 自定义仪表盘
@@ -75,6 +72,7 @@ public class DashboardView extends View {
     private Matrix mMatrix;
     private BitmapFactory.Options mOptions;
     private Bitmap mBitmap;
+    private Paint mPaint;
 
     public DashboardView(Context context) {
         this(context, null);
@@ -140,19 +138,21 @@ public class DashboardView extends View {
         mMatrix = new Matrix();
         mMatrix.setRotate(90, mWidth/2, mHeight/2);
         mSweepGradient.setLocalMatrix(mMatrix);
+        mPaint = new Paint();
+
     }
 
 
     @Override
     protected void onDraw(Canvas canvas) {
 
-        Paint p = new Paint();
+        mPaint.reset();
         int strokeWidth = 3;
-        p.setStrokeWidth(strokeWidth);
-        p.setAntiAlias(true);
-        p.setStyle(Paint.Style.STROKE);
-        p.setColor(mRadianColorOut);
-        p.setStrokeWidth(mScendArcWidth);
+        mPaint.setStrokeWidth(strokeWidth);
+        mPaint.setAntiAlias(true);
+        mPaint.setStyle(Paint.Style.STROKE);
+        mPaint.setColor(mRadianColorOut);
+        mPaint.setStrokeWidth(mScendArcWidth);
 
         RectF secondRectF = new RectF(strokeWidth + 50, strokeWidth + 50, mWidth - strokeWidth - 50, mHeight - strokeWidth - 50);
         float percent = mPercent / 100f;
@@ -166,25 +166,25 @@ public class DashboardView extends View {
         //画外部分粗弧
 //        p.setColor(ColorUtils.getCurrentColor(mPercent/100.0f,doughnutColors));
 
-        p.setShader(mSweepGradient);
+        mPaint.setShader(mSweepGradient);
 
         if(percent != 0){
-            canvas.drawArc(secondRectF, 145, fill, false, p);
+            canvas.drawArc(secondRectF, 145, fill, false, mPaint);
         }
 
-        p.reset();
-        p.setAntiAlias(true);
-        p.setStyle(Paint.Style.STROKE);
-        p.setStrokeWidth(mScendArcWidth);
+        mPaint.reset();
+        mPaint.setAntiAlias(true);
+        mPaint.setStyle(Paint.Style.STROKE);
+        mPaint.setStrokeWidth(mScendArcWidth);
         //内部分圆弧颜色
 //        if(percent==0){
 //            p.setColor(Color.WHITE);
 //            canvas.drawArc(secondRectF, 145, fill, false, p);
 //        }
         //内部分圆弧颜色
-        p.setColor(mRadianColorIn);
+        mPaint.setColor(mRadianColorIn);
         //画弧胡的未充满部分
-        canvas.drawArc(secondRectF, 145 + fill, empty, false, p);
+        canvas.drawArc(secondRectF, 145 + fill, empty, false, mPaint);
 
         //---------------------------------------------------
         int offsetX = 2;
@@ -192,13 +192,13 @@ public class DashboardView extends View {
         int startWidthY = 100;
 
         //绘制刻度！
-        p.setColor(mArcColor);
+        mPaint.setColor(mArcColor);
         //绘制第一条最上面的刻度
 
         //决定刻度，起始Y坐标
         mTikeWidth = 80;
-        p.setStrokeWidth(3);
-        canvas.drawLine(mWidth / offsetX, startWidthY, mWidth / offsetX, mTikeWidth, p);
+        mPaint.setStrokeWidth(3);
+        canvas.drawLine(mWidth / offsetX, startWidthY, mWidth / offsetX, mTikeWidth, mPaint);
 
         //旋转的角度
         float rAngle = 250f / mTikeCount;
@@ -207,7 +207,7 @@ public class DashboardView extends View {
         //通过旋转画布 绘制右面的刻度
         for (int i = 0; i < mTikeCount / 2; i++) {
             canvas.rotate(rAngle, mWidth / offsetX, mHeight / offsetX);
-            canvas.drawLine(mWidth / offsetX, startWidthY, mWidth / offsetX, mTikeWidth, p);
+            canvas.drawLine(mWidth / offsetX, startWidthY, mWidth / offsetX, mTikeWidth, mPaint);
         }
 
         //现在需要将将画布旋转回来
@@ -216,7 +216,7 @@ public class DashboardView extends View {
         //通过旋转画布 绘制左面的刻度
         for (int i = 0; i < mTikeCount / 2; i++) {
             canvas.rotate(-rAngle, mWidth / offsetX, mHeight / offsetX);
-            canvas.drawLine(mWidth / offsetX, startWidthY, mWidth / offsetX, mTikeWidth, p);
+            canvas.drawLine(mWidth / offsetX, startWidthY, mWidth / offsetX, mTikeWidth, mPaint);
         }
 
         //现在需要将将画布旋转回来
@@ -225,7 +225,7 @@ public class DashboardView extends View {
 
         //---------------------------------------------------
         //绘制矩形
-        p.setStyle(Paint.Style.FILL);
+        mPaint.setStyle(Paint.Style.FILL);
 //        p.setColor(Color.WHITE);
         mRectWidth = 100;
         mRectHeight = 300;
@@ -236,28 +236,28 @@ public class DashboardView extends View {
 //        canvas.drawRect(mWidth/2-mRectWidth/2,topDis,mWidth/2+mRectWidth/2,mRectHeight+topDis,p);
 
 
-        canvas.drawBitmap(mBitmap,(mWidth-mBitmap.getWidth())/2,topDis+20,p);
+        canvas.drawBitmap(mBitmap,(mWidth-mBitmap.getWidth())/2,topDis+20, mPaint);
 
         mTextSize = 32;
         mTextColor = getResources().getColor(R.color.colorTextType);
-        p.setTextSize(mTextSize);
-        p.setColor(mTextColor);
-        float textType = p.measureText(mTextType);
-        canvas.drawText(mTextType,(mWidth-textType)/2,topDis+120,p);
+        mPaint.setTextSize(mTextSize);
+        mPaint.setColor(mTextColor);
+        float textType = mPaint.measureText(mTextType);
+        canvas.drawText(mTextType,(mWidth-textType)/2,topDis+120, mPaint);
 
         mTextSize = 85;
         mTextColor = getResources().getColor(R.color.colorTextValue);
-        p.setTextSize(mTextSize);
-        p.setColor(mTextColor);
-        float textValue = p.measureText(mTextValue);
-        canvas.drawText(mTextValue,(mWidth-textValue)/2,topDis+220,p);
+        mPaint.setTextSize(mTextSize);
+        mPaint.setColor(mTextColor);
+        float textValue = mPaint.measureText(mTextValue);
+        canvas.drawText(mTextValue,(mWidth-textValue)/2,topDis+220, mPaint);
 
         mTextSize = 47;
         mTextColor = getResources().getColor(R.color.colorTextType);
-        p.setTextSize(mTextSize);
-        p.setColor(mTextColor);
-        float textUnit = p.measureText(mTextUnit);
-        canvas.drawText(mTextUnit,(mWidth-textUnit)/2,topDis+mRectHeight,p);
+        mPaint.setTextSize(mTextSize);
+        mPaint.setColor(mTextColor);
+        float textUnit = mPaint.measureText(mTextUnit);
+        canvas.drawText(mTextUnit,(mWidth-textUnit)/2,topDis+mRectHeight, mPaint);
 
         super.onDraw(canvas);
     }
