@@ -7,4 +7,4 @@
 
 第二个案例：
 
-![image](https://github.com/Giousa/DashboardView/blob/master/screenshot/second.png)
+![image](https://github.com/Giousa/DashboardView/blob/master/screenshot/second2.png)
